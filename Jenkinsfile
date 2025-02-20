@@ -16,11 +16,15 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                sudo apt-get update
-                sudo apt-get install -y unzip awscli
-                curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
-                unzip packer_1.8.2_linux_amd64.zip
-                sudo mv packer /usr/local/bin/
+                        sudo apt-get update
+        sudo apt-get install -y unzip
+        curl -LO "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        unzip awscli-exe-linux-x86_64.zip
+        sudo ./aws/install
+        curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
+        unzip packer_1.8.2_linux_amd64.zip
+        sudo mv packer /usr/local/bin/
+
                 '''
             }
         }
