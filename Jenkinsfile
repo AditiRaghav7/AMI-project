@@ -43,11 +43,11 @@ pipeline {
         stage('Build AMI with Packer') {
             steps {
                 script {
-                   sh 'ls -l packer.pkr.hcl || { echo "packer.pkr.hcl not found!"; exit 1; }'
+                   sh 'ls -l goldenimage.pkr.hcl || { echo "goldenimage.pkr.hcl not found!"; exit 1; }'
 
-                    sh 'packer init packer.pkr.hcl'
+                    sh 'packer init goldenimage.pkr.hcl'
 
-                    def packerOutput = sh(script: 'PACKER_LOG=1 PACKER_LOG_PATH=packer_debug.log packer build -machine-readable packer.pkr.hcl | tee output.log', returnStdout: true).trim()
+                    def packerOutput = sh(script: 'PACKER_LOG=1 PACKER_LOG_PATH=packer_debug.log packer build -machine-readable goldenimage.pkr.hcl | tee output.log', returnStdout: true).trim()
 
                     def amiIdMatch = packerOutput.find(/ami-\w{8,17}/)
 
