@@ -13,16 +13,16 @@ pipeline {
             }
         }
 
-        stage('Debug Workspace') {
-            steps {
-                sh '''
-                    echo "Listing files in workspace:"
-                    ls -l
-                    echo "Current working directory:"
-                    pwd
-                '''
-            }
-        }
+        //stage('Debug Workspace') {
+          //  steps {
+            //    sh '''
+              //      echo "Listing files in workspace:"
+                //    ls -l
+                  //  echo "Current working directory:"
+                    //pwd
+                //'''
+            //}
+        //}
 
         stage('Install Dependencies') {
             steps {
