@@ -53,11 +53,14 @@ pipeline {
                     sudo ./aws/install --update
 
                     # Install Packer
-                    curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
-                    unzip -o -q packer_1.8.2_linux_amd64.zip
-                    sudo mv packer /usr/local/bin/
+                    # Add the HashiCorp GPG key
+                    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
+                    # Add the HashiCorp repository
+                    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
+                    # Update package lists and install Packer
+                    sudo apt-get update && sudo apt-get install -y packer
 
                     # Install Jenkins
                     sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
