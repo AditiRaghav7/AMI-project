@@ -27,14 +27,42 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
+                  # Update system and install essential packages
                     sudo apt-get update
-                    sudo apt-get install -y unzip
-                    curl -LO "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-                    unzip -o -q awscli-exe-linux-x86_64.zip
+                    sudo apt-get install -y unzip curl wget git htop nginx docker.io ansible default-jdk
+
+                    # Enable and start essential services
+                    sudo systemctl enable --now nginx
+                    sudo systemctl enable --now docker
+
+                    # Add HashiCorp GPG key and repository
+                    wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+                    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+                    # Update system again and install Terraform
+                    sudo apt-get update
+                    sudo apt install -y terraform
+
+                    # Handle apt release changes & fix broken packages
+                    until sudo apt update --allow-releaseinfo-change -y; do echo 'Retrying apt update...'; sleep 2; done
+                    sudo apt --fix-broken install -y
+
+                    # Install AWS CLI
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip -o -q awscliv2.zip
                     sudo ./aws/install --update
+
+                    # Install Packer
                     curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
                     unzip -o -q packer_1.8.2_linux_amd64.zip
                     sudo mv packer /usr/local/bin/
+
+                    # Install Jenkins
+                    sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+                    echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+                    sudo apt-get update
+                    sudo apt-get install -y jenkins
+                    sudo systemctl enable --now jenkins
                 '''
             }
         }
