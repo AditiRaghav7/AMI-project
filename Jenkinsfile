@@ -29,7 +29,7 @@ pipeline {
                 sh '''
                                # Update system and install essential packages
                     sudo apt-get update
-                    sudo apt-get install -y unzip curl wget git htop nginx docker.io ansible default-jdk
+                    sudo apt-get install -y unzip curl wget git htop nginx docker.io ansible default-jdk ca-certificates gnupg
 
                     # Enable and start essential services
                     sudo systemctl enable --now nginx
@@ -41,7 +41,7 @@ pipeline {
 
                     # Update system again and install Terraform
                     sudo apt-get update
-                    sudo apt install -y terraform
+                    sudo apt install -y terraform packer 
 
                     # Handle apt release changes & fix broken packages
                     until sudo apt update --allow-releaseinfo-change -y; do echo 'Retrying apt update...'; sleep 2; done
@@ -55,14 +55,14 @@ pipeline {
                     # Install Packer
                     # Add the HashiCorp GPG key
                     # Add HashiCorp GPG key (fix for non-interactive shell)
-                    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+                    #curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
                     # Add HashiCorp repository
-                    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+                    #echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
                     # Update package lists and install required packages
-                    sudo apt-get update
-                    sudo apt-get install -y terraform packer
+                    #sudo apt-get update
+                    #sudo apt-get install -y terraform packer
 
                     # Add HashiCorp GPG key
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
