@@ -74,7 +74,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt-get update
 
 # Install Packer
-sudo apt-get install -y packer
+sudo apt install -y packer
 
 
                     # Install Jenkins
