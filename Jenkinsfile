@@ -56,7 +56,7 @@ pipeline {
                     curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
                     unzip -o -q packer_1.8.2_linux_amd64.zip
                     sudo mv packer /usr/local/bin/
-                    rm packer_1.8.2_linux_amd64.zip
+
 
 
                     # Install Jenkins
