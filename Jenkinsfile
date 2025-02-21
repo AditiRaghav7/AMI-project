@@ -27,7 +27,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                  # Update system and install essential packages
+                               # Update system and install essential packages
                     sudo apt-get update
                     sudo apt-get install -y unzip curl wget git htop nginx docker.io ansible default-jdk
 
