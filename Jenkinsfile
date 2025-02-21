@@ -31,9 +31,12 @@ pipeline {
         stage('Build AMI with Packer') {
             steps {
                 script {
-                    def packerOutput = sh(script: 'packer build -machine-readable packer.pkr.hcl | tee output.log', returnStdout: true).trim()
-                    
-                    // Fix: Proper regex matching for AMI ID
+                   sh 'ls -l packer.pkr.hcl || { echo "packer.pkr.hcl not found!"; exit 1; }'
+
+                    sh 'packer init packer.pkr.hcl'
+
+                    def packerOutput = sh(script: 'PACKER_LOG=1 PACKER_LOG_PATH=packer_debug.log packer build -machine-readable packer.pkr.hcl | tee output.log', returnStdout: true).trim()
+
                     def amiIdMatch = packerOutput.find(/ami-\w{8,17}/)
 
                     if (amiIdMatch) {
