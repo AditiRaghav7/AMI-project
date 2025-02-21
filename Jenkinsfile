@@ -27,7 +27,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                               # Update system and install essential packages
+                    # Update system and install essential packages
                     sudo apt-get update
                     sudo apt-get install -y unzip curl wget git htop nginx docker.io ansible default-jdk ca-certificates gnupg
 
@@ -56,36 +56,29 @@ pipeline {
                     sudo apt-get install -y unzip curl gnupg software-properties-common
                     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
                     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-                    sudo apt-get update
-                    sudo apt-get install -y packer
-                     packer --version
+                  
                     # Add HashiCorp repository
                     #echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
                     # Update package lists and install required packages
                     #sudo apt-get update
-                    #sudo apt-get install -y terraform packer
+                    #sudo apt-get install -y terraform 
 
                     # Add HashiCorp GPG key
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+                    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+                    # Install required dependencies
+                    sudo apt-get update
+                    sudo apt-get install -y ca-certificates curl gnupg
 
-        #!/bin/bash
+                    # Add HashiCorp GPG key securely
+                    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
-# Install required dependencies
-sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg
+                    # Add the HashiCorp repository
+                    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
 
-# Add HashiCorp GPG key securely
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+                    # Update package lists
+                    sudo apt-get update
 
-# Add the HashiCorp repository
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
-
-# Update package lists
-sudo apt-get update
-
-# Install Packer
-sudo apt-get install -y packer
 
 
                     # Install Jenkins
