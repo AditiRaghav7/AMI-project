@@ -67,15 +67,12 @@ pipeline {
                     # Add HashiCorp GPG key
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
-# Add the HashiCorp repository
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
-
-# Update package lists
-sudo apt-get update
-
-# Install Packer
-sudo apt install -y packer
-
+                sh 'sudo apt-get update'
+                sh 'sudo apt-get install -y ca-certificates'
+                sh 'curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -'
+                sh 'echo "deb [arch=amd64] https://apt.releases.hashicorp.com/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/hashicorp.list'
+                sh 'sudo apt-get update'
+                sh 'sudo apt-get install -y packer'
 
                     # Install Jenkins
                     sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
