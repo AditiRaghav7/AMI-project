@@ -13,20 +13,32 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Debug Workspace') {
             steps {
                 sh '''
-            sudo apt-get update
-            sudo apt-get install -y unzip
-            curl -LO "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-            unzip -o -q awscli-exe-linux-x86_64.zip
-            sudo ./aws/install --update
-            curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
-            unzip -o -q packer_1.8.2_linux_amd64.zip
-            sudo mv packer /usr/local/bin/
+                    echo "Listing files in workspace:"
+                    ls -l
+                    echo "Current working directory:"
+                    pwd
                 '''
             }
         }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    sudo apt-get update
+                    sudo apt-get install -y unzip
+                    curl -LO "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+                    unzip -o -q awscli-exe-linux-x86_64.zip
+                    sudo ./aws/install --update
+                    curl -LO https://releases.hashicorp.com/packer/1.8.2/packer_1.8.2_linux_amd64.zip
+                    unzip -o -q packer_1.8.2_linux_amd64.zip
+                    sudo mv packer /usr/local/bin/
+                '''
+            }
+        }
+
 
         stage('Build AMI with Packer') {
             steps {
