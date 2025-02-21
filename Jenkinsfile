@@ -64,11 +64,18 @@ pipeline {
                     sudo apt-get update
                     sudo apt-get install -y terraform packer
 
-                    # Add the HashiCorp repository
-                    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+                    # Add HashiCorp GPG key
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
-                    # Update package lists and install Packer
-                    sudo apt-get update && sudo apt-get install -y packer
+# Add the HashiCorp repository
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
+
+# Update package lists
+sudo apt-get update
+
+# Install Packer
+sudo apt-get install -y packer
+
 
                     # Install Jenkins
                     sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
